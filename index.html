@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pratique MRP com exercícios aleatórios e entenda cada resposta. Funciona offline, em um único arquivo.">
+  <title>MRP — um pedido de cada vez</title>
+  <style>
+    :root { color-scheme: light; --paper:#f6f5f0; --white:#fff; --ink:#233e36; --body:#40534c; --muted:#6b7972; --line:#dedfd6; --green:#17684d; --green-dark:#105039; --mint:#e9f2e9; --orange:#9a5425; --orange-light:#fff1e5; --red:#a33e32; --red-light:#fff2ee; --shadow:0 12px 42px #263d3210; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--paper); color:var(--body); font:15px/1.6 "Segoe UI",system-ui,sans-serif; }
+    button,input,summary { font:inherit; }
+    button,a,summary,input { -webkit-tap-highlight-color:transparent; }
+    button,summary { cursor:pointer; }
+    button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible { outline:3px solid #62a78d; outline-offset:4px; }
+    button { transition:background .15s,transform .15s; }
+    button:hover { transform:translateY(-1px); }
+    button:active { transform:translateY(0); }
+    [hidden] { display:none!important; }
+    .shell { width:min(1120px,calc(100% - 64px)); margin:auto; }
+    .masthead { display:flex; align-items:center; justify-content:space-between; padding:28px 0 23px; border-bottom:1px solid var(--line); gap:20px; }
+    .brand { display:flex; align-items:center; gap:12px; color:var(--ink); font-weight:650; letter-spacing:-.3px; }
+    .brand-mark { display:grid; place-items:center; width:39px; height:39px; background:var(--green); color:white; border-radius:11px; }
+    .brand-mark svg { width:23px; height:23px; }
+    .brand span:last-child { font-weight:400; color:var(--muted); margin-left:7px; font-size:13px; }
+    .offline { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px; letter-spacing:.03em; }
+    .offline::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--green); }
+    .hero { padding:47px 0 32px; display:flex; align-items:flex-end; justify-content:space-between; gap:30px; }
+    .eyebrow { text-transform:uppercase; letter-spacing:.15em; font-weight:650; font-size:11px; color:var(--green); margin:0 0 12px; }
+    h1 { color:var(--ink); font:400 clamp(34px,4.8vw,54px)/1.09 Georgia,"Times New Roman",serif; letter-spacing:-1.8px; margin:0 0 16px; }
+    h1 em { color:var(--green); font-style:italic; }
+    .hero-description { margin:0; color:var(--muted); max-width:620px; font-size:15px; }
+    .hero-number { white-space:nowrap; border-left:1px solid var(--line); padding:0 0 3px 23px; color:var(--muted); font-size:12px; }
+    .hero-number strong { display:block; font:400 38px/1.2 Georgia,serif; color:var(--ink); font-variant-numeric:tabular-nums; }
+    .workbook { background:var(--white); border:1px solid var(--line); border-radius:19px; box-shadow:var(--shadow); overflow:hidden; }
+    .workbook-header { padding:27px 30px 19px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .section-kicker { font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:600; letter-spacing:.12em; margin:0 0 5px; }
+    h2 { font-size:21px; color:var(--ink); line-height:1.3; letter-spacing:-.5px; margin:0; font-weight:650; }
+    .button { display:inline-flex; align-items:center; justify-content:center; gap:9px; border:1px solid var(--line); border-radius:9px; padding:11px 17px; background:white; color:var(--ink); font-size:13px; font-weight:600; line-height:1.5; text-decoration:none; }
+    .button:hover { background:#f3f5f0; }
+    .button svg { width:16px; height:16px; flex:none; }
+    .button.primary { border-color:var(--green); background:var(--green); color:white; }
+    .button.primary:hover { background:var(--green-dark); }
+    .parameters { margin:0 30px; display:grid; grid-template-columns:repeat(4,1fr); padding:20px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .parameter { padding:0 20px; border-left:1px solid var(--line); }
+    .parameter:first-child { border:0; padding-left:0; }
+    .parameter-label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
+    .parameter strong { font-size:27px; font-weight:650; color:var(--ink); letter-spacing:-1px; line-height:1.3; }
+    .parameter .unit { font-size:12px; color:var(--muted); margin-left:6px; }
+    .parameter .text-value { font-size:20px; letter-spacing:-.4px; }
+    .statement { margin:19px 30px 9px; font-size:14px; }
+    .statement strong { color:var(--ink); }
+    .conventions { margin:0 30px 23px; font-size:12px; color:var(--muted); }
+    .table-wrap { overflow-x:auto; padding:0 22px 4px; }
+    table { width:100%; border-collapse:separate; border-spacing:0; font-variant-numeric:tabular-nums; }
+    #answer-table { min-width:790px; table-layout:fixed; }
+    #answer-table col:first-child { width:220px; }
+    th,td { text-align:left; }
+    thead th { padding:12px 10px; background:#f1f4ef; font-weight:600; font-size:12px; color:var(--muted); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    thead th:first-child { border-radius:8px 0 0 8px; }
+    thead th:last-child { border-radius:0 8px 8px 0; }
+    thead th:not(:first-child), .given td { text-align:center; }
+    tbody th { padding:15px 10px; font-size:13px; font-weight:600; color:var(--ink); border-bottom:1px solid #eceee7; }
+    tbody th small { display:block; color:var(--muted); font-size:11px; font-weight:400; margin-top:2px; }
+    tbody td { padding:11px 7px; border-bottom:1px solid #eceee7; vertical-align:middle; }
+    .given td { color:var(--body); padding:15px 7px; font-size:14px; }
+    .given + .editable th, .given + .editable td { border-top:2px solid var(--line); }
+    .editable:last-child th,.editable:last-child td { border-bottom:0; }
+    .answer-input { width:100%; min-width:0; height:43px; border:1px solid #d6dcd3; border-radius:7px; background:#fdfefc; color:var(--ink); text-align:center; font-weight:600; font-size:15px; padding:7px 3px; }
+    .answer-input::placeholder { color:#acb5aa; font-weight:400; }
+    .answer-input:hover { border-color:#8aab97; }
+    td.correct .answer-input { border-color:#78a78b; background:#f0f7ef; }
+    td.incorrect .answer-input { border-color:#d08a74; background:#fff6ef; }
+    .cell-message { display:block; min-height:19px; margin-top:3px; text-align:center; color:var(--muted); font-size:10px; line-height:1.5; }
+    .correct .cell-message { color:var(--green); }
+    .explain-cell { border:0; padding:0; background:none; color:var(--red); font-size:10px; text-decoration:underline; text-underline-offset:2px; }
+    .explain-cell:hover { background:none; transform:none; }
+    .exercise-footer { border-top:1px solid var(--line); padding:19px 30px; display:flex; align-items:center; justify-content:space-between; gap:18px; background:#fafbf8; }
+    .fill-status { color:var(--muted); font-size:12px; }
+    .fill-status strong { color:var(--ink); }
+    .next-step { margin:20px 3px 27px; display:flex; gap:10px; align-items:flex-start; font-size:12px; color:var(--muted); }
+    .next-step svg { margin-top:2px; flex:none; width:16px; height:16px; color:var(--green); }
+    .quick-guide { background:#eeefe7; border:1px solid #e0e3d7; border-radius:12px; margin:0 0 32px; }
+    .quick-guide summary { padding:16px 20px; color:var(--ink); font-size:13px; font-weight:600; }
+    .guide-content { padding:0 22px 19px; display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+    .guide-content h3 { font-size:13px; margin:0 0 7px; color:var(--green); }
+    .guide-content p { font-size:12px; margin:0; }
+    .guide-content .guide-note { grid-column:1/-1; padding-top:13px; border-top:1px solid #d6ddcd; }
+    .results { scroll-margin-top:20px; margin-bottom:35px; }
+    .results-head { display:grid; grid-template-columns:125px 1fr auto; align-items:center; gap:27px; padding:27px 29px; border:1px solid #cddfce; background:var(--mint); border-radius:16px; }
+    .score-circle { --score:0; width:115px; height:115px; border-radius:50%; display:grid; place-items:center; background:conic-gradient(var(--green) calc(var(--score)*1%),#d5e4d5 0); position:relative; }
+    .score-circle::before { content:""; position:absolute; inset:7px; background:var(--mint); border-radius:50%; }
+    .score-circle strong { position:relative; color:var(--green-dark); font-size:27px; font-weight:650; letter-spacing:-1px; }
+    .result-description { margin:7px 0 0; font-size:13px; }
+    .edited-note { display:block; color:var(--orange); margin-top:8px; font-size:12px; }
+    .feedback-heading { margin:27px 0 13px; display:flex; align-items:baseline; justify-content:space-between; gap:15px; }
+    .feedback-heading h3 { color:var(--ink); font-size:17px; margin:0; }
+    .feedback-heading span { color:var(--muted); font-size:12px; }
+    .week-feedback { border:1px solid var(--line); border-radius:11px; background:white; margin:10px 0; overflow:hidden; }
+    .week-feedback > summary { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 20px; color:var(--ink); list-style:none; font-weight:600; font-size:14px; }
+    .week-feedback > summary::-webkit-details-marker { display:none; }
+    .week-feedback > summary::after { content:"+"; font-weight:400; color:var(--muted); font-size:21px; }
+    .week-feedback[open] > summary::after { content:"−"; }
+    .week-feedback > summary .week-count { margin-left:auto; font-size:12px; color:var(--orange); font-weight:400; }
+    .error-item { padding:19px 22px; border-top:1px solid #e8ebe3; scroll-margin-top:18px; }
+    .error-title { display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px; margin-bottom:10px; }
+    .error-title h4 { margin:0; color:var(--ink); font-size:14px; }
+    .answer-compare { font-size:12px; color:var(--muted); }
+    .answer-compare strong { color:var(--green-dark); font-weight:650; }
+    .why { margin:0 0 10px; padding:9px 13px; border-left:3px solid #cb9270; background:var(--orange-light); color:#754327; font-size:13px; }
+    .reasoning { font-size:13px; margin:0; max-width:900px; }
+    .calculation { margin:12px 0 0; background:#f3f5f0; padding:11px 14px; border-radius:7px; color:var(--ink); font-size:13px; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+    .resolution { border-top:1px solid var(--line); margin-top:26px; padding-top:12px; }
+    .resolution > summary { padding:10px 0; color:var(--ink); font-size:14px; font-weight:600; }
+    .solution-table { min-width:660px; margin-top:12px; }
+    .solution-table td { text-align:center; padding:9px 10px; font-size:13px; border-bottom:1px solid var(--line); }
+    .solution-table th { font-size:12px; }
+    .solution-content { padding:17px 0 0; font-size:13px; }
+    .solution-content h4 { color:var(--ink); margin:18px 0 6px; }
+    .solution-content p { margin:6px 0; }
+    .all-correct { margin-top:18px; padding:17px 20px; border:1px solid #cddfce; border-radius:10px; background:white; font-size:14px; }
+    .page-footer { padding:18px 0 28px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; color:var(--muted); font-size:11px; border-top:1px solid var(--line); }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; clip:rect(0,0,0,0); overflow:hidden; white-space:nowrap; border:0; }
+    @media (max-width:800px) {
+      .shell { width:calc(100% - 32px); }
+      .hero { padding-top:34px; }
+      .workbook-header { padding:22px 20px 17px; }
+      .parameters { margin:0 20px; }
+      .parameter { padding:0 12px; }
+      .statement { margin:17px 20px 8px; }
+      .conventions { margin:0 20px 18px; }
+      .table-wrap { padding:0 12px 4px; }
+      .exercise-footer { padding:17px 20px; }
+      .results-head { grid-template-columns:100px 1fr; gap:18px; padding:22px; }
+      .results-head .button { grid-column:1/-1; justify-self:start; }
+      .score-circle { width:95px; height:95px; }
+      .guide-content { grid-template-columns:1fr; gap:17px; }
+    }
+    @media (max-width:480px) {
+      .masthead { padding:19px 0; }
+      .brand span:last-child { display:none; }
+      .offline { font-size:11px; }
+      .hero { align-items:flex-start; gap:14px; }
+      h1 { letter-spacing:-1.1px; }
+      .hero-number { padding-left:12px; font-size:10px; }
+      .hero-number strong { font-size:29px; }
+      .hero-description { font-size:13px; }
+      .workbook-header { flex-direction:column; align-items:stretch; gap:14px; }
+      .workbook-header .button { align-self:flex-start; }
+      .parameters { grid-template-columns:1fr 1fr; row-gap:19px; }
+      .parameter:nth-child(3) { border-left:0; padding-left:0; }
+      .parameter strong { font-size:25px; }
+      .statement { font-size:13px; }
+      .exercise-footer { flex-direction:column; align-items:stretch; }
+      .fill-status { text-align:center; }
+      .results-head { grid-template-columns:82px 1fr; gap:14px; padding:19px 16px; }
+      .score-circle { width:80px; height:80px; }
+      .score-circle strong { font-size:23px; }
+      .results-head h2 { font-size:18px; }
+      .error-item { padding:16px; }
+      .feedback-heading { align-items:flex-start; flex-direction:column; gap:4px; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } button { transition:none; } button:hover { transform:none; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m12 3 9 5-9 5-9-5 9-5Z M3 12l9 5 9-5 M3 16l9 5 9-5"/></svg></div><div>MRP<span>caderno de prática</span></div></div>
+      <div class="offline">Funciona offline</div>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div><p class="eyebrow">Operações &amp; qualidade</p><h1 id="page-title">Um pedido<br><em>de cada vez.</em></h1><p class="hero-description">Pratique o planejamento de materiais. Preencha, confira e entenda o raciocínio por trás de cada número.</p></div>
+        <div class="hero-number">QUESTÃO<strong id="question-number">001</strong></div>
+      </section>
+      <section class="workbook" aria-labelledby="exercise-title">
+        <div class="workbook-header"><div><p class="section-kicker">Seu exercício</p><h2 id="exercise-title">Planejamento do item A</h2></div><button class="button" id="randomize-top" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h3c5 0 5 12 10 12h3M17 3l4 3-4 3M4 18h3c2 0 3-2 4-4M14 8c1-1 2-2 4-2h3M17 15l4 3-4 3"/></svg>Aleatorizar questão</button></div>
+        <div class="parameters">
+          <div class="parameter"><span class="parameter-label">Estoque inicial</span><strong id="initial-stock">—</strong><span class="unit">peças</span></div>
+          <div class="parameter"><span class="parameter-label">Estoque de segurança</span><strong id="safety-stock">—</strong><span class="unit">peças</span></div>
+          <div class="parameter"><span class="parameter-label">Lead time</span><strong>1</strong><span class="unit">semana</span></div>
+          <div class="parameter"><span class="parameter-label">Política de lote</span><strong class="text-value">Lote a lote</strong><span class="unit">L4L</span></div>
+        </div>
+        <p class="statement" id="exercise-statement"></p>
+        <p class="conventions">Todas as entregas chegam antes do consumo. O estoque projetado é o saldo ao fim da semana. Não há demandas após a semana 6. Preencha com 0 quando não houver quantidade.</p>
+        <form id="exercise-form" novalidate>
+          <div class="table-wrap" role="region" aria-label="Tabela MRP, com rolagem horizontal em telas pequenas" tabindex="0">
+            <table id="answer-table"><caption class="sr-only">Preencha as quatro linhas de cálculo do planejamento MRP. Cada célula vale um ponto.</caption><colgroup><col><col span="6"></colgroup><thead><tr><th scope="col">Quantidade em peças</th><th scope="col">Semana 1</th><th scope="col">Semana 2</th><th scope="col">Semana 3</th><th scope="col">Semana 4</th><th scope="col">Semana 5</th><th scope="col">Semana 6</th></tr></thead><tbody id="exercise-body"></tbody></table>
+          </div>
+          <div class="exercise-footer"><span class="fill-status" id="fill-status"><strong>0 de 24</strong> campos preenchidos</span><button class="button primary" type="submit" id="submit-button">Entregar respostas <span aria-hidden="true">→</span></button></div>
+        </form>
+      </section>
+      <div class="next-step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M9 18h6M10 21h4M8 13a6 6 0 1 1 8 0c-1 1-1 2-1 3H9c0-1 0-2-1-3Z"/></svg><span>O saldo final passa para a próxima semana. Deixe a liberação planejada por último: o pedido é emitido uma semana antes da chegada.</span></div>
+      <details class="quick-guide"><summary>Precisa lembrar a diferença entre as três linhas?</summary><div class="guide-content"><div><h3>01 · Necessidade líquida</h3><p>É o que falta depois de considerar o estoque disponível, as entregas já programadas, o consumo e a reserva que deve sobrar.</p></div><div><h3>02 · Recebimento planejado</h3><p>É a nova quantidade que precisa chegar naquela semana. Como a política é L4L, ela é igual à necessidade líquida.</p></div><div><h3>03 · Liberação planejada</h3><p>É a emissão do pedido. Com prazo de uma semana, copie o recebimento planejado uma coluna para a esquerda.</p></div><p class="guide-note"><strong>Como decidir se precisa pedir:</strong> estoque anterior + recebimento já programado − consumo. Se esse saldo for menor que a reserva, planeje receber a diferença. A reserva é um mínimo: o estoque pode terminar acima dela.</p></div></details>
+      <section class="results" id="results" aria-labelledby="results-title" hidden></section>
+      <div class="sr-only" role="status" aria-live="polite" id="announcement"></div>
+    </main>
+    <footer class="page-footer"><span>Feito para aprender a lógica, não decorar a tabela.</span><span>6 semanas · 24 respostas · correção explicada</span></footer>
+  </div>
+  <script>
+    (() => {
+      'use strict';
+      const KEY='aioq-mrp-trainer-v1';
+      const labels=['Estoque projetado','Necessidade líquida','Recebimento planejado','Liberação planejada'];
+      const descriptions=['Saldo ao fim da semana','Quanto está faltando','Nova entrega a receber','Pedido emitido antes'];
+      const body=document.getElementById('exercise-body');
+      const results=document.getElementById('results');
+      const form=document.getElementById('exercise-form');
+      const submit=document.getElementById('submit-button');
+      const announcement=document.getElementById('announcement');
+      const fmt=new Intl.NumberFormat('pt-BR',{maximumFractionDigits:1});
+      const esc=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+      let question, answer, state, counter=0, delivered=false, dirty=false;
+      const entries=[];
+      function random(min,max) { const buffer=new Uint32Array(1); const ratio=window.crypto?.getRandomValues?(window.crypto.getRandomValues(buffer),buffer[0]/4294967296):Math.random();return min+Math.floor(ratio*(max-min+1)); }
+      function pick5(min,max) { return random(Math.ceil(min/5),Math.floor(max/5))*5; }
+      function solve(q) {
+        const ep=[],nl=[],incoming=[],before=[];
+        let previous=q.initial;
+        for(let w=0;w<6;w++) {
+          const available=previous+q.scheduled[w]-q.gross[w];
+          const need=Math.max(0,q.safety-available);
+          before.push(previous);nl.push(need);incoming.push(need);
+          previous=available+need;ep.push(previous);
+        }
+        return {rows:[ep,nl,incoming,incoming.slice(1).concat(0)],before};
+      }
+      function generate() {
+        let q;
+        for(let attempt=0;attempt<500;attempt++) {
+          const safety=pick5(10,35);
+          const gross=Array.from({length:6},()=>pick5(20,105));
+          const initial=gross[0]+safety+pick5(15,60);
+          const scheduled=[0,pick5(20,65),0,0,0,0];
+          if(random(0,3)===0) scheduled[random(3,4)]=pick5(15,45);
+          q={initial,safety,gross,scheduled,item:String.fromCharCode(65+random(0,25))};
+          const solution=solve(q);
+          const partial=solution.rows[1].some((n,w)=>n>0&&n!==gross[w]);
+          const varied=solution.rows[0].some(n=>n>safety);
+          const fingerprint=value=>JSON.stringify(value&&[value.initial,value.safety,value.gross,value.scheduled]);
+          if(solution.rows[1].filter(n=>n>0).length>=2&&partial&&varied&&fingerprint(q)!==fingerprint(question))return q;
+        }
+        return q;
+      }
+      function validQuestion(q) { return q&&Number.isInteger(q.initial)&&q.initial>0&&q.initial<10000&&Number.isInteger(q.safety)&&q.safety>0&&q.safety<1000&&['gross','scheduled'].every(key=>Array.isArray(q[key])&&q[key].length===6&&q[key].every(n=>Number.isInteger(n)&&n>=0&&n<1000))&&q.initial>=q.gross[0]+q.safety&&typeof q.item==='string'&&/^[A-Z]$/.test(q.item); }
+      function numeric(value) { return /^\d+$/.test(value.trim())&&Number.isSafeInteger(Number(value))&&Number(value)>=0?Number(value):null; }
+      function display(value) { return value.trim()===''?'Em branco':esc(value); }
+      function persist() { try { localStorage.setItem(KEY,JSON.stringify({question,counter,answers:state,delivered,dirty})); } catch(_) {} }
+      function updateFill() { const filled=state.filter(value=>value.trim()!=='').length; document.getElementById('fill-status').innerHTML=`<strong>${filled} de 24</strong> campos preenchidos`; }
+      function renderQuestion() {
+        answer=solve(question);entries.length=0;
+        document.getElementById('question-number').textContent=String(counter).padStart(3,'0');
+        document.getElementById('exercise-title').textContent=`Planejamento do item ${question.item}`;
+        document.getElementById('initial-stock').textContent=question.initial;
+        document.getElementById('safety-stock').textContent=question.safety;
+        const arrivals=question.scheduled.map((n,w)=>n?`<strong>${n} peças na semana ${w+1}</strong>`:null).filter(Boolean);
+        document.getElementById('exercise-statement').innerHTML=`Planeje as necessidades deste item para seis semanas. Já existe recebimento programado de ${arrivals.join(' e ')}. Complete as quatro linhas abaixo e indique, na última, quando emitir as novas ordens.`;
+        let html=`<tr class="given" data-row="gross"><th scope="row">Necessidade bruta<small>Consumo previsto</small></th>${question.gross.map(n=>`<td>${n}</td>`).join('')}</tr>`;
+        html+=`<tr class="given" data-row="scheduled"><th scope="row">Recebimento programado<small>Entrega de uma ordem já existente</small></th>${question.scheduled.map(n=>`<td>${n}</td>`).join('')}</tr>`;
+        for(let r=0;r<4;r++)html+=`<tr class="editable"><th scope="row">${labels[r]}<small>${descriptions[r]}</small></th>${Array.from({length:6},(_,w)=>`<td id="cell-${r}-${w}"><input class="answer-input" id="input-${r}-${w}" data-row="${r}" data-week="${w}" type="text" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="·" value="${esc(state[r*6+w])}" aria-label="${labels[r]}, semana ${w+1}, em peças" aria-describedby="message-${r}-${w}"><span class="cell-message" id="message-${r}-${w}"></span></td>`).join('')}</tr>`;
+        body.innerHTML=html;
+        body.querySelectorAll('input').forEach(input=>{
+          const r=Number(input.dataset.row),w=Number(input.dataset.week);
+          entries.push({input,r,w,cell:document.getElementById(`cell-${r}-${w}`),message:document.getElementById(`message-${r}-${w}`)});
+          input.addEventListener('input',()=>{
+            state[r*6+w]=input.value;updateFill();
+            if(delivered) {
+              dirty=true;
+              input.removeAttribute('aria-invalid');
+              document.getElementById(`cell-${r}-${w}`).className='';
+              document.getElementById(`message-${r}-${w}`).textContent='Alterado';
+              const note=document.getElementById('edited-note');if(note)note.hidden=false;
+            }
+            persist();
+          });
+        });
+        updateFill();submit.innerHTML=delivered?'Conferir novamente <span aria-hidden="true">→</span>':'Entregar respostas <span aria-hidden="true">→</span>';
+      }
+      function calculation(r,w) {
+        const previous=answer.before[w],rp=question.scheduled[w],nb=question.gross[w],ss=question.safety,need=answer.rows[1][w],ep=answer.rows[0][w];
+        const balance=previous+rp-nb;
+        const origin=w===0?'Você começa o exercício':`Você traz o saldo final da semana ${w}`;
+        if(r===0)return {reason:`${origin} com ${previous} peças. Some as ${rp} já programadas e as ${need} da nova entrega planejada; depois desconte o consumo de ${nb}. O estoque projetado é o que sobra após todos esses movimentos, e deve ficar em pelo menos ${ss}.`,formula:`${previous} (saldo anterior) + ${rp} (já programadas) + ${need} (nova entrega) − ${nb} (consumo) = ${ep} peças no fim da semana.`};
+        if(r===1)return {reason:balance>=ss?`Sem pedir nada novo, sobrariam ${balance} peças: ${previous} que vieram da semana anterior, mais ${rp} já programadas, menos ${nb} de consumo. Isso já preserva a reserva mínima de ${ss}; por isso não falta nenhuma peça e a necessidade líquida é 0.`:`Sem uma nova entrega, o saldo seria ${balance}: ${previous} disponíveis + ${rp} já programadas − ${nb} de consumo. Para terminar com a reserva de ${ss}, faltam ${need} peças. A necessidade líquida cobre tanto o consumo quanto a reserva.`,formula:`Saldo sem nova entrega: ${previous} + ${rp} − ${nb} = ${balance}. Necessidade líquida: máximo entre 0 e (${ss} − ${balance<0?'('+balance+')':balance}) = ${need}.`};
+        if(r===2)return {reason:need===0?`A necessidade líquida da semana ${w+1} é 0: estoque e recebimentos já programados são suficientes para atender ao consumo e preservar a reserva. Nenhuma nova entrega precisa chegar nesta semana.`:`A necessidade líquida da semana ${w+1} é ${need}. Na política lote a lote (L4L), você planeja receber exatamente essa quantidade na mesma semana. O adiantamento pelo prazo acontece na liberação do pedido, não nesta linha.`,formula:`Recebimento planejado da semana ${w+1} = necessidade líquida da semana ${w+1} = ${need} peças.`};
+        if(w===5)return {reason:'A última coluna registra ordens emitidas na semana 6. Com prazo de uma semana, elas chegariam na semana 7. O enunciado diz que não há demandas após a semana 6; por isso nenhuma nova emissão é necessária aqui. A ordem para receber na semana 6 já foi emitida na semana 5.',formula:'Sem recebimento planejado na semana 7 → liberação planejada na semana 6 = 0.'};
+        const future=answer.rows[2][w+1];
+        return {reason:future===0?`Na semana ${w+2}, o recebimento planejado é 0. Portanto, não há pedido novo a emitir na semana ${w+1} para essa chegada. A liberação olha para a necessidade de chegada da próxima semana, e não copia a necessidade bruta.`:`Na semana ${w+2}, precisam chegar ${future} peças de uma nova ordem. Como o prazo é de uma semana, esse pedido deve ser emitido na semana ${w+1}. Mesmo que nesta semana não precise chegar nenhuma compra, pode ser preciso emitir uma ordem para a próxima.`,formula:`Receber ${future} peças na semana ${w+2} → emitir ${future} peças na semana ${w+1}. Liberação = recebimento planejado uma coluna à frente.`};
+      }
+      function diagnosis(r,w,raw) {
+        const value=numeric(raw),expected=answer.rows[r][w],previous=answer.before[w],scheduled=question.scheduled[w],gross=question.gross[w],safety=question.safety,need=answer.rows[1][w],without=previous+scheduled-gross;
+        if(raw.trim()==='')return 'Este campo ficou em branco. Cada célula é uma resposta; se não houver quantidade, você precisa escrever 0.';
+        if(value===null)return 'A quantidade precisa ser um número inteiro igual ou maior que zero. Neste exercício não há peças fracionadas nem respostas negativas.';
+        if(r===0) {
+          if(value===without&&need>0)return 'Você chegou ao saldo sem a nova reposição. Como ele fica abaixo da reserva, é preciso incluir o recebimento planejado antes de fechar o estoque da semana.';
+          if(value===safety&&expected>safety)return 'A reserva de segurança é um mínimo, não um saldo obrigatório. Se sobram mais peças, mantenha esse excedente no estoque para a próxima semana.';
+          const userPrevious=w===0?question.initial:numeric(state[w-1]);
+          const userReceipt=numeric(state[12+w]);
+          if(userPrevious!==null&&userReceipt!==null&&value===userPrevious+scheduled+userReceipt-gross&&(userPrevious!==previous||userReceipt!==need))return 'Sua conta de saldo combina com os valores que você preencheu, mas o estoque anterior ou o recebimento planejado já está diferente do correto. Revise essas células primeiro; o erro foi carregado para esta semana.';
+          if(value===previous)return 'Esse é o saldo que entra na semana. O estoque projetado precisa considerar também o que chega e o que será consumido durante ela.';
+          return 'O estoque projetado é o saldo final. Confira se incluiu os dois tipos de recebimento e descontou o consumo, sem somar a liberação do pedido como se ela fosse uma entrega.';
+        }
+        if(r===1) {
+          if(value===Math.max(0,gross-previous-scheduled)&&need>0)return 'Você cobriu apenas a falta para consumir, mas ainda precisa preservar o estoque de segurança. Conseguir atender à demanda não basta se a reserva ficar abaixo do mínimo.';
+          if(value===gross&&need!==gross)return 'Você repetiu a necessidade bruta. Antes de pedir, desconte o estoque disponível e as entregas já programadas, preservando a reserva.';
+          if(expected===0)return 'O estoque que já existe, junto das entregas programadas, é suficiente. Não é preciso repor automaticamente a reserva se ela já está preservada.';
+          return 'A necessidade líquida é apenas a diferença necessária para atender ao consumo e terminar com a reserva. Confira o saldo anterior e lembre de contar a entrega já programada.';
+        }
+        if(r===2) {
+          const userNeed=numeric(state[6+w]);
+          if(userNeed!==null&&userNeed!==need&&value===userNeed)return 'Você copiou a necessidade líquida que preencheu, o que é a relação correta no L4L. Porém, essa necessidade líquida está errada; revise a conta dela e atualize a entrega.';
+          if(value===answer.rows[3][w]&&value!==need)return 'Você parece ter deslocado a chegada junto com o pedido. A entrega deve ficar na semana em que as peças serão usadas; somente a liberação é antecipada.';
+          if(value===gross&&need!==gross)return 'O recebimento planejado não repete necessariamente a necessidade bruta. No L4L, ele repete a necessidade líquida correta desta mesma semana.';
+          return 'Com lote a lote, esta linha deve ser igual à necessidade líquida da mesma coluna. Ela mostra a chegada da nova ordem, além de qualquer entrega que já estava programada.';
+        }
+        if(w<5&&value===0&&expected>0)return 'Aqui é preciso emitir um pedido para a próxima semana. Não precisar receber uma compra nesta semana não significa que você não precise emitir uma ordem para depois.';
+        if(value===need&&expected!==need)return 'Você colocou a ordem na semana da chegada. Como a entrega demora uma semana, a emissão precisa ficar uma coluna antes. Para esta coluna, olhe o recebimento planejado da próxima semana.';
+        if(w<5&&value===question.gross[w+1]&&expected!==value)return 'Você pediu toda a necessidade bruta da próxima semana. A emissão deve copiar apenas o recebimento planejado da próxima semana, que já considera o estoque e a reserva.';
+        return w===5?'Não há demanda após a semana 6. A compra que chega na semana 6 é emitida na semana 5; não é necessário repetir sua emissão na semana 6.':'A liberação depende da semana de chegada e do prazo. Com uma semana de prazo, ela deve copiar o recebimento planejado da coluna seguinte.';
+      }
+      function resolutionMarkup() {
+        const rows=labels.map((label,r)=>`<tr><th scope="row">${label}</th>${answer.rows[r].map(n=>`<td>${n}</td>`).join('')}</tr>`).join('');
+        const weeks=question.gross.map((nb,w)=>{
+          const previous=answer.before[w],rp=question.scheduled[w],without=previous+rp-nb,need=answer.rows[1][w];
+          return `<h4>Semana ${w+1}</h4><p>Saldo sem nova entrega: <strong>${previous} + ${rp} − ${nb} = ${without}</strong>. ${need?`Para preservar ${question.safety} peças de segurança, faltam <strong>${need}</strong>. Receba ${need} nesta semana e emita essa ordem na <strong>semana ${w}</strong>.`:`Como já sobram pelo menos ${question.safety} peças, a necessidade líquida e o novo recebimento são <strong>0</strong>.`} Estoque final: <strong>${answer.rows[0][w]}</strong>.</p>`;
+        }).join('');
+        return `<details class="resolution"><summary>Ver a resolução completa, semana por semana</summary><div class="table-wrap"><table class="solution-table"><caption class="sr-only">Gabarito completo do exercício</caption><thead><tr><th scope="col">Linha / semana</th>${Array.from({length:6},(_,w)=>`<th scope="col">${w+1}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div><div class="solution-content">${weeks}</div></details>`;
+      }
+      function correct(scroll=true) {
+        let count=0,blanks=0;const errors=[];
+        entries.forEach(({input,r,w,cell,message})=>{
+          const raw=state[r*6+w],value=numeric(raw),ok=value!==null&&value===answer.rows[r][w];
+          if(raw.trim()==='')blanks++;
+          cell.className=ok?'correct':'incorrect';
+          input.setAttribute('aria-invalid',String(!ok));
+          if(ok) {count++;message.textContent='✓ Certo';}
+          else {message.innerHTML=`<button class="explain-cell" type="button" data-error="error-${r}-${w}">${raw.trim()===''?'Em branco':'Rever'} · por quê?</button>`;errors.push({r,w,raw});}
+        });
+        const percentage=count/24*100;
+        const heading=count===24?'Você fechou o planejamento.':percentage>=75?'Você está chegando lá.':percentage>=40?'Vamos ajustar o raciocínio.':'Vamos construir essa lógica juntos.';
+        let feedback='';
+        if(!errors.length)feedback='<div class="all-correct">Todos os saldos, reposições e datas de emissão estão corretos. Pratique com outros números para confirmar que entendeu o processo.</div>';
+        else {
+          let first=true;
+          for(let w=0;w<6;w++) {
+            const group=errors.filter(error=>error.w===w);if(!group.length)continue;
+            const details=group.map(({r,w,raw})=>{const c=calculation(r,w);return `<article class="error-item" id="error-${r}-${w}" tabindex="-1"><div class="error-title"><h4>${labels[r]}</h4><span class="answer-compare">Sua resposta: ${display(raw)} &nbsp;·&nbsp; Correto: <strong>${answer.rows[r][w]}</strong></span></div><p class="why"><strong>Por que revisar:</strong> ${diagnosis(r,w,raw)}</p><p class="reasoning">${c.reason}</p><p class="calculation">${c.formula}</p></article>`;}).join('');
+            feedback+=`<details class="week-feedback" ${first?'open':''}><summary>Semana ${w+1}<span class="week-count">${group.length} ${group.length===1?'ajuste':'ajustes'}</span></summary>${details}</details>`;first=false;
+          }
+          feedback=`<div class="feedback-heading"><h3>Onde você errou — e por quê</h3><span>Abra uma semana ou clique na célula marcada.</span></div>${feedback}`;
+        }
+        results.innerHTML=`<div class="results-head"><div class="score-circle" style="--score:${percentage}" aria-label="${fmt.format(percentage)} por cento de acerto"><strong>${fmt.format(percentage)}%</strong></div><div><p class="section-kicker">Sua entrega</p><h2 id="results-title">${heading}</h2><p class="result-description"><strong>${count} de 24 células corretas.</strong> Cada célula tem o mesmo peso.${blanks?` ${blanks} ${blanks===1?'campo ficou':'campos ficaram'} em branco e ${blanks===1?'conta':'contam'} como erro.`:''}</p><span class="edited-note" id="edited-note" hidden>Você alterou respostas. Clique em “Conferir novamente” para atualizar esta correção.</span></div><button class="button" type="button" id="randomize-result">Aleatorizar questão <span aria-hidden="true">↗</span></button></div>${feedback}${resolutionMarkup()}`;
+        results.hidden=false;delivered=true;dirty=false;
+        submit.innerHTML='Conferir novamente <span aria-hidden="true">→</span>';
+        document.getElementById('randomize-result').addEventListener('click',()=>newQuestion(true));
+        announcement.textContent=`Entrega corrigida: ${fmt.format(percentage)} por cento de acerto. ${count} de 24 células corretas. ${errors.length} respostas para revisar.`;
+        persist();if(scroll)results.scrollIntoView({behavior:reducedMotion()?'auto':'smooth',block:'start'});
+      }
+      function reducedMotion() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+      function newQuestion(scroll=false) {
+        question=generate();counter++;state=Array(24).fill('');delivered=false;dirty=false;
+        results.hidden=true;results.replaceChildren();renderQuestion();persist();
+        announcement.textContent=`Nova questão ${counter}. Todos os campos foram limpos.`;
+        if(scroll)document.getElementById('exercise-title').scrollIntoView({behavior:reducedMotion()?'auto':'smooth',block:'start'});
+      }
+      document.getElementById('randomize-top').addEventListener('click',()=>newQuestion(false));
+      form.addEventListener('submit',event=>{event.preventDefault();correct(true);});
+      body.addEventListener('click',event=>{
+        const button=event.target.closest('[data-error]');if(!button)return;
+        const article=document.getElementById(button.dataset.error);if(!article)return;
+        article.closest('details').open=true;
+        article.scrollIntoView({behavior:reducedMotion()?'auto':'smooth',block:'center'});
+        article.focus({preventScroll:true});
+      });
+      let saved=null;try{saved=JSON.parse(localStorage.getItem(KEY));}catch(_){}
+      if(validQuestion(saved?.question)&&Array.isArray(saved.answers)&&saved.answers.length===24&&saved.answers.every(x=>typeof x==='string'&&x.length<=8)) {
+        question=saved.question;counter=Number.isInteger(saved.counter)&&saved.counter>0?saved.counter:1;state=saved.answers;renderQuestion();
+        if(saved.delivered)correct(false);
+      } else newQuestion();
+    })();
+  </script>
+</body>
+</html>
